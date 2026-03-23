@@ -1,0 +1,32 @@
+name: Java CI with Maven (Projeto Sirius)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 1. Baixar o Código
+      uses: actions/checkout@v4
+
+    - name: 2. Configurar o JDK 17 (Ou a versão que você usa)
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: 3. Build com Maven
+      # O comando 'package' garante que o seu erro de 'Main Class' não volte
+      run: mvn -B package --file pom.xml
+
+    - name: 4. Upload do Artefato (Opcional)
+      uses: actions/upload-artifact@v4
+      with:
+        name: financas-service-jar
+        path: target/*.jar
