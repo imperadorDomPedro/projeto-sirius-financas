@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Budget.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.domain.model</a> &gt; <span class="el_source">Budget.java</span></div><h1>Budget.java</h1><pre class="source lang-java linenums">package com.financas.domain.model;
+
+import com.financas.domain.valueobject.Money;
+import lombok.Getter;
+
+import java.util.UUID;
+
+@Getter
+public class Budget {
+
+<span class="nc" id="L11">    private final UUID id;</span>
+
+<span class="nc" id="L13">    private final UUID userId;</span>
+
+<span class="nc" id="L15">    private final UUID categoryId;</span>
+
+<span class="nc" id="L17">    private Money limitAmount;</span>
+
+<span class="nc" id="L19">    private Money spentAmount;</span>
+
+<span class="nc" id="L21">    private final int month;</span>
+
+<span class="nc" id="L23">    private final int year;</span>
+
+    private Budget(UUID id, UUID userId, UUID categoryId,
+<span class="fc" id="L26">                   Money limitAmount, Money spentAmount, int month, int year) {</span>
+<span class="fc" id="L27">        this.id = id;</span>
+<span class="fc" id="L28">        this.userId = userId;</span>
+<span class="fc" id="L29">        this.categoryId = categoryId;</span>
+<span class="fc" id="L30">        this.limitAmount = limitAmount;</span>
+<span class="fc" id="L31">        this.spentAmount = spentAmount;</span>
+<span class="fc" id="L32">        this.month = month;</span>
+<span class="fc" id="L33">        this.year = year;</span>
+<span class="fc" id="L34">    }</span>
+
+    public static Budget create(UUID userId, UUID categoryId, Money limit, int month, int year) {
+<span class="fc" id="L37">        validateMonthYear(month, year);</span>
+<span class="fc" id="L38">        return new Budget(UUID.randomUUID(), userId, categoryId, limit, Money.zero(), month, year);</span>
+    }
+
+    public static Budget reconstitute(UUID id, UUID userId, UUID categoryId,
+                                       Money limit, Money spent, int month, int year) {
+<span class="nc" id="L43">        return new Budget(id, userId, categoryId, limit, spent, month, year);</span>
+    }
+
+    public void addSpending(Money amount) {
+<span class="fc" id="L47">        this.spentAmount = this.spentAmount.add(amount);</span>
+<span class="fc" id="L48">    }</span>
+
+    public boolean isExceeded() {
+<span class="fc" id="L51">        return this.spentAmount.isGreaterThan(this.limitAmount);</span>
+    }
+
+    public Money getRemainingAmount() {
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (isExceeded()) return Money.zero();</span>
+<span class="fc" id="L56">        return this.limitAmount.subtract(this.spentAmount);</span>
+    }
+
+    public double getUsagePercent() {
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (limitAmount.isZero()) return 0.0;</span>
+<span class="fc" id="L61">        return spentAmount.amount()</span>
+<span class="fc" id="L62">                .divide(limitAmount.amount(), 4, java.math.RoundingMode.HALF_UP)</span>
+<span class="fc" id="L63">                .multiply(java.math.BigDecimal.valueOf(100))</span>
+<span class="fc" id="L64">                .doubleValue();</span>
+    }
+
+    private static void validateMonthYear(int month, int year) {
+<span class="pc bpc" id="L68" title="2 of 4 branches missed.">        if (month &lt; 1 || month &gt; 12) throw new IllegalArgumentException(&quot;Invalid month: &quot; + month);</span>
+<span class="pc bpc" id="L69" title="2 of 4 branches missed.">        if (year &lt; 2000 || year &gt; 2100) throw new IllegalArgumentException(&quot;Invalid year: &quot; + year);</span>
+<span class="fc" id="L70">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

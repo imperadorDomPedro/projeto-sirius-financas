@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransactionRepositoryImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.infrastructure.persistence.repository</a> &gt; <span class="el_source">TransactionRepositoryImpl.java</span></div><h1>TransactionRepositoryImpl.java</h1><pre class="source lang-java linenums">package com.financas.infrastructure.persistence.repository;
+
+import com.financas.domain.model.Transaction;
+import com.financas.domain.repository.TransactionRepository;
+import com.financas.domain.valueobject.TransactionType;
+import com.financas.infrastructure.persistence.mapper.TransactionMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+<span class="nc" id="L16">@RequiredArgsConstructor</span>
+public class TransactionRepositoryImpl implements TransactionRepository {
+    private final TransactionJpaRepository jpa;
+    private final TransactionMapper mapper;
+
+    @Override
+    public Transaction save(Transaction t) {
+<span class="nc" id="L23">        return mapper.toDomain(jpa.save(mapper.toEntity(t)));</span>
+    }
+
+    @Override
+    public Optional&lt;Transaction&gt; findById(UUID id) {
+<span class="nc" id="L28">        return jpa.findById(id).map(mapper::toDomain);</span>
+    }
+
+    @Override
+    public List&lt;Transaction&gt; findByAccountId(UUID accountId) {
+<span class="nc" id="L33">        return jpa.findByAccountId(accountId).stream().map(mapper::toDomain).toList();</span>
+    }
+
+    @Override
+    public List&lt;Transaction&gt; findByUserIdAndDateBetween(UUID userId, LocalDate from, LocalDate to) {
+<span class="nc" id="L38">        return jpa.findByUserIdAndDateBetween(userId, from, to).stream().map(mapper::toDomain).toList();</span>
+    }
+
+    @Override
+    public List&lt;Transaction&gt; findByUserIdAndType(UUID userId, TransactionType type) {
+<span class="nc" id="L43">        return jpa.findByUserIdAndType(userId, type).stream().map(mapper::toDomain).toList();</span>
+    }
+
+    @Override
+    public List&lt;Transaction&gt; findByCategoryIdAndMonthYear(UUID categoryId, int month, int year) {
+<span class="nc" id="L48">        return jpa.findByCategoryIdAndMonthYear(categoryId, month, year).stream().map(mapper::toDomain).toList();</span>
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+<span class="nc" id="L53">        jpa.deleteById(id);</span>
+<span class="nc" id="L54">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

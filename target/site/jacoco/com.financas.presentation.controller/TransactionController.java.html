@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransactionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.presentation.controller</a> &gt; <span class="el_source">TransactionController.java</span></div><h1>TransactionController.java</h1><pre class="source lang-java linenums">package com.financas.presentation.controller;
+
+import com.financas.application.dto.request.CreateTransactionRequest;
+import com.financas.application.dto.response.TransactionResponse;
+import com.financas.application.usecase.CancelTransactionUseCase;
+import com.financas.application.usecase.CreateTransactionUseCase;
+import com.financas.application.usecase.GetTransactionsUseCase;
+import com.financas.domain.model.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/transactions&quot;)
+<span class="nc" id="L26">@RequiredArgsConstructor</span>
+@Tag(name = &quot;Transactions&quot;)
+@SecurityRequirement(name = &quot;bearerAuth&quot;)
+public class TransactionController {
+
+    private final CreateTransactionUseCase createUseCase;
+    private final GetTransactionsUseCase getUseCase;
+    private final CancelTransactionUseCase cancelUseCase;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = &quot;Create transaction&quot;)
+    public ResponseEntity&lt;TransactionResponse&gt; create(
+            @AuthenticationPrincipal User user,
+            @Valid @RequestBody CreateTransactionRequest request) {
+<span class="nc" id="L41">        return ResponseEntity.status(HttpStatus.CREATED).body(createUseCase.execute(request));</span>
+    }
+
+    @GetMapping
+    @Operation(summary = &quot;List transactions by period&quot;)
+    public ResponseEntity&lt;List&lt;TransactionResponse&gt;&gt; list(
+            @AuthenticationPrincipal User user,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+<span class="nc" id="L50">        return ResponseEntity.ok(getUseCase.execute(user.getId(), from, to));</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = &quot;Cancel transaction&quot;)
+    public ResponseEntity&lt;Void&gt; cancel(@PathVariable UUID id) {
+<span class="nc" id="L57">        cancelUseCase.execute(id);</span>
+<span class="nc" id="L58">        return ResponseEntity.noContent().build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

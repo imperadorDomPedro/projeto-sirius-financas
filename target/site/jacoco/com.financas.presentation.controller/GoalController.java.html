@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GoalController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.presentation.controller</a> &gt; <span class="el_source">GoalController.java</span></div><h1>GoalController.java</h1><pre class="source lang-java linenums">package com.financas.presentation.controller;
+
+import com.financas.application.dto.request.CreateGoalRequest;
+import com.financas.application.dto.request.GoalContributeRequest;
+import com.financas.application.dto.response.GoalResponse;
+import com.financas.application.usecase.ManageGoalUseCase;
+import com.financas.domain.model.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/goals&quot;)
+<span class="nc" id="L23">@RequiredArgsConstructor</span>
+@Tag(name = &quot;Goals&quot;)
+@SecurityRequirement(name = &quot;bearerAuth&quot;)
+public class GoalController {
+
+    private final ManageGoalUseCase goalUseCase;
+
+    @PostMapping
+    @Operation(summary = &quot;Create financial goal&quot;)
+    public ResponseEntity&lt;GoalResponse&gt; create(
+            @AuthenticationPrincipal User user,
+            @Valid @RequestBody CreateGoalRequest request) {
+<span class="nc" id="L35">        return ResponseEntity.status(HttpStatus.CREATED).body(goalUseCase.create(user.getId(), request));</span>
+    }
+
+    @GetMapping
+    @Operation(summary = &quot;List goals&quot;)
+    public ResponseEntity&lt;List&lt;GoalResponse&gt;&gt; list(@AuthenticationPrincipal User user) {
+<span class="nc" id="L41">        return ResponseEntity.ok(goalUseCase.listByUser(user.getId()));</span>
+    }
+
+    @PostMapping(&quot;/{id}/contribute&quot;)
+    @Operation(summary = &quot;Contribute to a goal&quot;)
+    public ResponseEntity&lt;GoalResponse&gt; contribute(
+            @PathVariable UUID id,
+            @Valid @RequestBody GoalContributeRequest request) {
+<span class="nc" id="L49">        return ResponseEntity.ok(goalUseCase.contribute(id, request));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

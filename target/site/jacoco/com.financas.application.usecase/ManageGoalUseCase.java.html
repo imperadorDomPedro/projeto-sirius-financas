@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ManageGoalUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.application.usecase</a> &gt; <span class="el_source">ManageGoalUseCase.java</span></div><h1>ManageGoalUseCase.java</h1><pre class="source lang-java linenums">package com.financas.application.usecase;
+
+import com.financas.application.dto.request.CreateGoalRequest;
+import com.financas.application.dto.request.GoalContributeRequest;
+import com.financas.application.dto.response.GoalResponse;
+import com.financas.domain.exception.ResourceNotFoundException;
+import com.financas.domain.model.Goal;
+import com.financas.domain.repository.GoalRepository;
+import com.financas.domain.valueobject.Money;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+<span class="nc" id="L18">@RequiredArgsConstructor</span>
+public class ManageGoalUseCase {
+
+    private final GoalRepository goalRepository;
+
+    @Transactional
+    public GoalResponse create(UUID userId, CreateGoalRequest request) {
+<span class="nc" id="L25">        Goal goal = Goal.create(userId, request.getName(),</span>
+<span class="nc" id="L26">                Money.of(request.getTargetAmount()), request.getDeadline());</span>
+<span class="nc" id="L27">        return toResponse(goalRepository.save(goal));</span>
+    }
+
+    @Transactional
+    public GoalResponse contribute(UUID goalId, GoalContributeRequest request) {
+<span class="nc" id="L32">        Goal goal = goalRepository.findById(goalId)</span>
+<span class="nc" id="L33">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Goal&quot;, goalId));</span>
+<span class="nc" id="L34">        goal.contribute(Money.of(request.getAmount()));</span>
+<span class="nc" id="L35">        return toResponse(goalRepository.save(goal));</span>
+    }
+
+    @Transactional(readOnly = true)
+    public List&lt;GoalResponse&gt; listByUser(UUID userId) {
+<span class="nc" id="L40">        return goalRepository.findByUserId(userId).stream().map(this::toResponse).toList();</span>
+    }
+
+    public GoalResponse toResponse(Goal g) {
+<span class="nc" id="L44">        return GoalResponse.builder()</span>
+<span class="nc" id="L45">                .id(g.getId())</span>
+<span class="nc" id="L46">                .name(g.getName())</span>
+<span class="nc" id="L47">                .targetAmount(g.getTargetAmount().amount())</span>
+<span class="nc" id="L48">                .currentAmount(g.getCurrentAmount().amount())</span>
+<span class="nc" id="L49">                .progressPercent(g.getProgressPercent())</span>
+<span class="nc" id="L50">                .deadline(g.getDeadline())</span>
+<span class="nc" id="L51">                .status(g.getStatus())</span>
+<span class="nc" id="L52">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

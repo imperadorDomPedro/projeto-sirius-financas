@@ -1,0 +1,4 @@
+com\financas\domain\model\AccountTest.class
+com\financas\domain\model\MoneyTest.class
+com\financas\domain\model\BudgetTest.class
+com\financas\domain\model\TransactionTest.class

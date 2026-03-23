@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GetDashboardUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.application.usecase</a> &gt; <span class="el_source">GetDashboardUseCase.java</span></div><h1>GetDashboardUseCase.java</h1><pre class="source lang-java linenums">package com.financas.application.usecase;
+
+import com.financas.application.dto.response.DashboardResponse;
+import com.financas.domain.model.Transaction;
+import com.financas.domain.repository.BudgetRepository;
+import com.financas.domain.repository.GoalRepository;
+import com.financas.domain.repository.TransactionRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+<span class="nc" id="L19">@RequiredArgsConstructor</span>
+public class GetDashboardUseCase {
+
+    private final TransactionRepository transactionRepository;
+
+    private final BudgetRepository budgetRepository;
+
+    private final GoalRepository goalRepository;
+
+    private final ManageBudgetUseCase manageBudgetUseCase;
+
+    private final ManageGoalUseCase manageGoalUseCase;
+
+    @Transactional(readOnly = true)
+    public DashboardResponse execute(UUID userId, int month, int year) {
+<span class="nc" id="L34">        LocalDate from = LocalDate.of(year, month, 1);</span>
+<span class="nc" id="L35">        LocalDate to = from.withDayOfMonth(from.lengthOfMonth());</span>
+
+<span class="nc" id="L37">        List&lt;Transaction&gt; transactions = transactionRepository.findByUserIdAndDateBetween(userId, from, to);</span>
+
+<span class="nc" id="L39">        BigDecimal totalIncome = transactions.stream()</span>
+<span class="nc" id="L40">                .filter(Transaction::isIncome)</span>
+<span class="nc" id="L41">                .filter(Transaction::isConfirmed)</span>
+<span class="nc" id="L42">                .map(t -&gt; t.getAmount().amount())</span>
+<span class="nc" id="L43">                .reduce(BigDecimal.ZERO, BigDecimal::add);</span>
+
+<span class="nc" id="L45">        BigDecimal totalExpense = transactions.stream()</span>
+<span class="nc" id="L46">                .filter(Transaction::isExpense)</span>
+<span class="nc" id="L47">                .filter(Transaction::isConfirmed)</span>
+<span class="nc" id="L48">                .map(t -&gt; t.getAmount().amount())</span>
+<span class="nc" id="L49">                .reduce(BigDecimal.ZERO, BigDecimal::add);</span>
+
+<span class="nc" id="L51">        BigDecimal balance = totalIncome.subtract(totalExpense);</span>
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        BigDecimal savingsRate = totalIncome.compareTo(BigDecimal.ZERO) &gt; 0</span>
+<span class="nc" id="L54">                ? balance.divide(totalIncome, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100))</span>
+<span class="nc" id="L55">                : BigDecimal.ZERO;</span>
+
+<span class="nc" id="L57">        var budgetAlerts = budgetRepository.findByUserIdAndMonthAndYear(userId, month, year)</span>
+<span class="nc" id="L58">                .stream()</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                .filter(b -&gt; b.getUsagePercent() &gt;= 80)</span>
+<span class="nc" id="L60">                .map(b -&gt; manageBudgetUseCase.toResponse(b, null))</span>
+<span class="nc" id="L61">                .toList();</span>
+
+<span class="nc" id="L63">        var activeGoals = goalRepository.findByUserId(userId).stream()</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                .filter(g -&gt; g.getStatus() == com.financas.domain.valueobject.GoalStatus.IN_PROGRESS)</span>
+<span class="nc" id="L65">                .map(manageGoalUseCase::toResponse)</span>
+<span class="nc" id="L66">                .toList();</span>
+
+<span class="nc" id="L68">        var recentTransactions = transactions.stream()</span>
+<span class="nc" id="L69">                .sorted((a, b) -&gt; b.getTransactionDate().compareTo(a.getTransactionDate()))</span>
+<span class="nc" id="L70">                .limit(10)</span>
+<span class="nc" id="L71">                .map(CreateTransactionUseCase::toResponse)</span>
+<span class="nc" id="L72">                .toList();</span>
+
+<span class="nc" id="L74">        return DashboardResponse.builder()</span>
+<span class="nc" id="L75">                .totalIncome(totalIncome)</span>
+<span class="nc" id="L76">                .totalExpense(totalExpense)</span>
+<span class="nc" id="L77">                .balance(balance)</span>
+<span class="nc" id="L78">                .savingsRate(savingsRate)</span>
+<span class="nc" id="L79">                .budgetAlerts(budgetAlerts)</span>
+<span class="nc" id="L80">                .activeGoals(activeGoals)</span>
+<span class="nc" id="L81">                .recentTransactions(recentTransactions)</span>
+<span class="nc" id="L82">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

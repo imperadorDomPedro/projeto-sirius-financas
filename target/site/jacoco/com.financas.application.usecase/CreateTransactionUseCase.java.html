@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreateTransactionUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.application.usecase</a> &gt; <span class="el_source">CreateTransactionUseCase.java</span></div><h1>CreateTransactionUseCase.java</h1><pre class="source lang-java linenums">package com.financas.application.usecase;
+
+import com.financas.application.dto.request.CreateTransactionRequest;
+import com.financas.application.dto.response.TransactionResponse;
+import com.financas.domain.exception.ResourceNotFoundException;
+import com.financas.domain.model.Account;
+import com.financas.domain.model.Transaction;
+import com.financas.domain.repository.AccountRepository;
+import com.financas.domain.repository.TransactionRepository;
+import com.financas.domain.valueobject.Money;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+<span class="nc" id="L16">@RequiredArgsConstructor</span>
+public class CreateTransactionUseCase {
+
+    private final TransactionRepository transactionRepository;
+
+    private final AccountRepository accountRepository;
+
+    @Transactional
+    public TransactionResponse execute(CreateTransactionRequest request) {
+<span class="nc" id="L25">        Account account = accountRepository.findById(request.getAccountId())</span>
+<span class="nc" id="L26">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Account&quot;, request.getAccountId()));</span>
+
+<span class="nc" id="L28">        Money amount = Money.of(request.getAmount());</span>
+
+<span class="nc" id="L30">        Transaction transaction = Transaction.create(</span>
+<span class="nc" id="L31">                account.getId(),</span>
+<span class="nc" id="L32">                request.getCategoryId(),</span>
+                amount,
+<span class="nc" id="L34">                request.getType(),</span>
+<span class="nc" id="L35">                request.getDescription(),</span>
+<span class="nc" id="L36">                request.getTransactionDate()</span>
+        );
+
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (transaction.isExpense()) {</span>
+<span class="nc" id="L40">            account.debit(amount);</span>
+        } else {
+<span class="nc" id="L42">            account.credit(amount);</span>
+        }
+
+<span class="nc" id="L45">        accountRepository.save(account);</span>
+<span class="nc" id="L46">        Transaction saved = transactionRepository.save(transaction);</span>
+
+<span class="nc" id="L48">        return toResponse(saved);</span>
+    }
+
+    public static TransactionResponse toResponse(Transaction t) {
+<span class="nc" id="L52">        return TransactionResponse.builder()</span>
+<span class="nc" id="L53">                .id(t.getId())</span>
+<span class="nc" id="L54">                .accountId(t.getAccountId())</span>
+<span class="nc" id="L55">                .categoryId(t.getCategoryId())</span>
+<span class="nc" id="L56">                .amount(t.getAmount().amount())</span>
+<span class="nc" id="L57">                .type(t.getType())</span>
+<span class="nc" id="L58">                .description(t.getDescription())</span>
+<span class="nc" id="L59">                .transactionDate(t.getTransactionDate())</span>
+<span class="nc" id="L60">                .status(t.getStatus())</span>
+<span class="nc" id="L61">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
