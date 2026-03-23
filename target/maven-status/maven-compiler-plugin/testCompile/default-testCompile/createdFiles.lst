@@ -1,4 +1,10 @@
-com\financas\domain\model\AccountTest.class
-com\financas\domain\model\MoneyTest.class
-com\financas\domain\model\BudgetTest.class
-com\financas\domain\model\TransactionTest.class
+com/financas/domain/model/MoneyTest.class
+com/financas/domain/model/TransactionTest.class
+com/financas/domain/model/AccountTest$Create.class
+com/financas/domain/model/AccountTest$Debit.class
+com/financas/domain/model/BudgetTest.class
+com/financas/domain/model/AccountTest$Reconstitute.class
+com/financas/domain/model/AccountTest$Deactivate.class
+com/financas/domain/model/AccountTest$Rename.class
+com/financas/domain/model/AccountTest.class
+com/financas/domain/model/AccountTest$Credit.class
