@@ -1,3 +1,9 @@
 package com.financas.domain.valueobject;
 
-public enum AccountType { CHECKING, SAVINGS, CASH, INVESTMENT, CREDIT_CARD }
+public enum AccountType {
+    CHECKING,   // Conta corrente
+    SAVINGS,    // Poupança
+    CASH,       // Dinheiro em espécie
+    INVESTMENT, // Investimento
+    CREDIT_CARD // Cartão de crédito
+}

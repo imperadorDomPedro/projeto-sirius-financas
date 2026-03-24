@@ -20,10 +20,12 @@ public class Category {
 
     private String icon;
 
-    private UUID parentId;
+    private final UUID parentId; // null = categoria raiz
+
+    private boolean active;
 
     private Category(UUID id, UUID userId, String name, CategoryType type,
-                     String color, String icon, UUID parentId) {
+                     String color, String icon, UUID parentId, boolean active) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -31,21 +33,39 @@ public class Category {
         this.color = color;
         this.icon = icon;
         this.parentId = parentId;
+        this.active = active;
     }
 
-    public static Category create(UUID userId, String name, CategoryType type, String color, String icon) {
+    public static Category create(UUID userId, String name, CategoryType type,
+                                  String color, String icon, UUID parentId) {
+        if (userId == null) throw new IllegalArgumentException("UserId is required");
         if (name == null || name.isBlank()) throw new IllegalArgumentException("Category name is required");
-        return new Category(UUID.randomUUID(), userId, name, type, color, icon, null);
+        if (type == null) throw new IllegalArgumentException("Category type is required");
+
+        return new Category(UUID.randomUUID(), userId, name.trim(), type,
+                color, icon, parentId, true);
     }
 
     public static Category reconstitute(UUID id, UUID userId, String name, CategoryType type,
-                                         String color, String icon, UUID parentId) {
-        return new Category(id, userId, name, type, color, icon, parentId);
+                                        String color, String icon, UUID parentId, boolean active) {
+        return new Category(id, userId, name, type, color, icon, parentId, active);
     }
 
-    public void update(String name, String color, String icon) {
-        if (name != null && !name.isBlank()) this.name = name;
-        if (color != null) this.color = color;
-        if (icon != null) this.icon = icon;
+    public boolean isSubcategory() {
+        return this.parentId != null;
+    }
+
+    public void rename(String newName) {
+        if (newName == null || newName.isBlank()) throw new IllegalArgumentException("Name cannot be blank");
+        this.name = newName.trim();
+    }
+
+    public void updateAppearance(String color, String icon) {
+        if (color != null && !color.isBlank()) this.color = color;
+        if (icon != null && !icon.isBlank()) this.icon = icon;
+    }
+
+    public void deactivate() {
+        this.active = false;
     }
 }

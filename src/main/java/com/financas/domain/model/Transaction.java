@@ -15,67 +15,112 @@ public class Transaction {
 
     private final UUID accountId;
 
-    private UUID categoryId;
-
-    private UUID recurrenceId;
+    private final UUID userId;
 
     private Money amount;
 
     private TransactionType type;
 
-    private String description;
+    private UUID categoryId;
 
-    private LocalDate transactionDate;
+    private LocalDate date;
+
+    private String description;
 
     private TransactionStatus status;
 
-    private Transaction(UUID id, UUID accountId, UUID categoryId, UUID recurrenceId,
-                        Money amount, TransactionType type, String description,
-                        LocalDate transactionDate, TransactionStatus status) {
+    private final boolean installment;
+
+    private final int totalInstallments;
+
+    private final int currentInstallment;
+
+    private Transaction(UUID id, UUID accountId, UUID userId, Money amount,
+                        TransactionType type, UUID categoryId, LocalDate date,
+                        String description, TransactionStatus status,
+                        boolean installment, int totalInstallments, int currentInstallment) {
         this.id = id;
         this.accountId = accountId;
-        this.categoryId = categoryId;
-        this.recurrenceId = recurrenceId;
+        this.userId = userId;
         this.amount = amount;
         this.type = type;
+        this.categoryId = categoryId;
+        this.date = date;
         this.description = description;
-        this.transactionDate = transactionDate;
         this.status = status;
+        this.installment = installment;
+        this.totalInstallments = totalInstallments;
+        this.currentInstallment = currentInstallment;
     }
 
-    public static Transaction create(UUID accountId, UUID categoryId, Money amount,
-                                     TransactionType type, String description, LocalDate date) {
-        if (accountId == null) throw new IllegalArgumentException("Account is required");
-        if (amount == null || amount.isZero()) throw new IllegalArgumentException("Amount must be greater than zero");
+    public static Transaction create(UUID accountId, UUID userId, Money amount,
+                                     TransactionType type, UUID categoryId,
+                                     LocalDate date, String description) {
+        if (accountId == null) throw new IllegalArgumentException("AccountId is required");
+        if (userId == null) throw new IllegalArgumentException("UserId is required");
+        if (amount == null) throw new IllegalArgumentException("Amount is required");
+        if (amount.isZero()) throw new IllegalArgumentException("Amount cannot be zero");
         if (type == null) throw new IllegalArgumentException("Transaction type is required");
         if (date == null) throw new IllegalArgumentException("Date is required");
 
-        return new Transaction(UUID.randomUUID(), accountId, categoryId, null,
-                amount, type, description, date, TransactionStatus.CONFIRMED);
+        return new Transaction(UUID.randomUUID(), accountId, userId, amount, type,
+                categoryId, date, description, TransactionStatus.CONFIRMED,
+                false, 1, 1);
     }
 
-    public static Transaction reconstitute(UUID id, UUID accountId, UUID categoryId, UUID recurrenceId,
-                                            Money amount, TransactionType type, String description,
-                                            LocalDate date, TransactionStatus status) {
-        return new Transaction(id, accountId, categoryId, recurrenceId, amount, type, description, date, status);
+    public static Transaction createInstallment(UUID accountId, UUID userId, Money amount,
+                                                TransactionType type, UUID categoryId,
+                                                LocalDate date, String description,
+                                                int totalInstallments, int currentInstallment) {
+        if (totalInstallments < 2) throw new IllegalArgumentException("Installments must be at least 2");
+        if (currentInstallment < 1 || currentInstallment > totalInstallments)
+            throw new IllegalArgumentException("Current installment out of range");
+
+        return new Transaction(UUID.randomUUID(), accountId, userId, amount, type,
+                categoryId, date, description, TransactionStatus.CONFIRMED,
+                true, totalInstallments, currentInstallment);
     }
 
-    public void cancel() {
-        if (this.status == TransactionStatus.CANCELLED) {
-            throw new IllegalStateException("Transaction is already cancelled");
-        }
-        this.status = TransactionStatus.CANCELLED;
+    public static Transaction reconstitute(UUID id, UUID accountId, UUID userId, Money amount,
+                                           TransactionType type, UUID categoryId, LocalDate date,
+                                           String description, TransactionStatus status,
+                                           boolean installment, int totalInstallments, int currentInstallment) {
+        return new Transaction(id, accountId, userId, amount, type, categoryId, date,
+                description, status, installment, totalInstallments, currentInstallment);
     }
 
     public void confirm() {
-        if (this.status != TransactionStatus.PENDING) {
-            throw new IllegalStateException("Only pending transactions can be confirmed");
-        }
+        if (this.status == TransactionStatus.CANCELLED)
+            throw new IllegalStateException("Cannot confirm a cancelled transaction");
         this.status = TransactionStatus.CONFIRMED;
     }
 
-    public boolean isExpense()  { return this.type == TransactionType.EXPENSE; }
-    public boolean isIncome()   { return this.type == TransactionType.INCOME; }
-    public boolean isConfirmed(){ return this.status == TransactionStatus.CONFIRMED; }
-    public boolean isCancelled(){ return this.status == TransactionStatus.CANCELLED; }
+    public void cancel() {
+        if (this.status == TransactionStatus.CANCELLED)
+            throw new IllegalStateException("Transaction is already cancelled");
+        this.status = TransactionStatus.CANCELLED;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void reschedule(LocalDate newDate) {
+        if (newDate == null) throw new IllegalArgumentException("Date cannot be null");
+        if (this.status == TransactionStatus.CANCELLED)
+            throw new IllegalStateException("Cannot reschedule a cancelled transaction");
+        this.date = newDate;
+    }
+
+    public boolean isPending() {
+        return this.status == TransactionStatus.PENDING;
+    }
+
+    public boolean isCancelled() {
+        return this.status == TransactionStatus.CANCELLED;
+    }
+
+    public boolean isConfirmed() {
+        return this.status == TransactionStatus.CONFIRMED;
+    }
 }

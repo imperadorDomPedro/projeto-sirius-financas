@@ -14,7 +14,7 @@ public class Budget {
 
     private final UUID categoryId;
 
-    private Money limitAmount;
+    private final Money limitAmount;
 
     private Money spentAmount;
 
