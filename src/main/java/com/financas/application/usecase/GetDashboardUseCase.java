@@ -66,7 +66,7 @@ public class GetDashboardUseCase {
                 .toList();
 
         var recentTransactions = transactions.stream()
-                .sorted((a, b) -> b.getTransactionDate().compareTo(a.getTransactionDate()))
+                .sorted((a, b) -> b.getDate().compareTo(a.getDate()))
                 .limit(10)
                 .map(CreateTransactionUseCase::toResponse)
                 .toList();

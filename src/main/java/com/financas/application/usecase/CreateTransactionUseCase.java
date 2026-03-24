@@ -29,11 +29,12 @@ public class CreateTransactionUseCase {
 
         Transaction transaction = Transaction.create(
                 account.getId(),
-                request.getCategoryId(),
+                account.getUserId(),
                 amount,
                 request.getType(),
-                request.getDescription(),
-                request.getTransactionDate()
+                request.getCategoryId(),
+                request.getTransactionDate(),
+                request.getDescription()
         );
 
         if (transaction.isExpense()) {
@@ -56,7 +57,7 @@ public class CreateTransactionUseCase {
                 .amount(t.getAmount().amount())
                 .type(t.getType())
                 .description(t.getDescription())
-                .transactionDate(t.getTransactionDate())
+                .transactionDate(t.getDate())
                 .status(t.getStatus())
                 .build();
     }

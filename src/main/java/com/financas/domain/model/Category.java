@@ -14,7 +14,7 @@ public class Category {
 
     private String name;
 
-    private CategoryType type;
+    private final CategoryType type;
 
     private String color;
 

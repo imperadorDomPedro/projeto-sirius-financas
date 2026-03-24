@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
     public Category toDomain(CategoryEntity e) {
 <span class="nc" id="L17">        return Category.reconstitute(e.getId(), e.getUserId(), e.getName(),</span>
-<span class="nc" id="L18">                e.getType(), e.getColor(), e.getIcon(), e.getParentId());</span>
+<span class="nc" id="L18">                e.getType(), e.getColor(), e.getIcon(), e.getParentId(), e.isActive());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

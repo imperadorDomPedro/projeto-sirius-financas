@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Role.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Finan Cabelini</a> &gt; <a href="index.source.html" class="el_package">com.financas.domain.model</a> &gt; <span class="el_source">Role.java</span></div><h1>Role.java</h1><pre class="source lang-java linenums">package com.financas.domain.model;
+
+import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+@Getter
+public class Role {
+
+<span class="nc" id="L13">    private final UUID id;</span>
+
+<span class="nc" id="L15">    private String name;</span>
+
+<span class="nc" id="L17">    private String description;</span>
+
+    private final List&lt;Permission&gt; permissions;
+
+<span class="nc" id="L21">    private Role(UUID id, String name, String description, List&lt;Permission&gt; permissions) {</span>
+<span class="nc" id="L22">        this.id = id;</span>
+<span class="nc" id="L23">        this.name = name;</span>
+<span class="nc" id="L24">        this.description = description;</span>
+<span class="nc" id="L25">        this.permissions = new ArrayList&lt;&gt;(permissions);</span>
+<span class="nc" id="L26">    }</span>
+
+    public static Role create(String name, String description) {
+<span class="nc bnc" id="L29" title="All 4 branches missed.">        if (name == null || name.isBlank()) throw new IllegalArgumentException(&quot;Role name is required&quot;);</span>
+<span class="nc" id="L30">        return new Role(UUID.randomUUID(), name.toUpperCase().trim(), description, List.of());</span>
+    }
+
+    public static Role reconstitute(UUID id, String name, String description, List&lt;Permission&gt; permissions) {
+<span class="nc" id="L34">        return new Role(id, name, description, permissions);</span>
+    }
+
+    public void addPermission(Permission permission) {
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (permission == null) throw new IllegalArgumentException(&quot;Permission cannot be null&quot;);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (!permissions.contains(permission)) {</span>
+<span class="nc" id="L40">            permissions.add(permission);</span>
+        }
+<span class="nc" id="L42">    }</span>
+
+    public void removePermission(Permission permission) {
+<span class="nc" id="L45">        permissions.remove(permission);</span>
+<span class="nc" id="L46">    }</span>
+
+    public boolean hasPermission(String permissionCode) {
+<span class="nc" id="L49">        return permissions.stream()</span>
+<span class="nc" id="L50">                .anyMatch(p -&gt; p.getCode().equalsIgnoreCase(permissionCode));</span>
+    }
+
+    public List&lt;Permission&gt; getPermissions() {
+<span class="nc" id="L54">        return Collections.unmodifiableList(permissions);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

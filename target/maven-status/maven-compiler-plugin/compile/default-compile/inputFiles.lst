@@ -10,6 +10,7 @@
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/persistence/entity/CategoryEntity.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/usecase/ManageCategoryUseCase.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/valueobject/TransactionStatus.java
+/home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/model/Permission.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/presentation/controller/TransferController.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/persistence/repository/GoalJpaRepository.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/response/BudgetResponse.java
@@ -27,11 +28,13 @@
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/repository/GoalRepository.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/request/CreateTransferRequest.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/security/JwtService.java
+/home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/model/Role.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/response/GoalResponse.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/persistence/mapper/GoalMapper.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/presentation/controller/TransactionController.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/config/OpenApiConfig.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/presentation/controller/DashboardController.java
+/home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/model/UserProfile.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/persistence/entity/AccountEntity.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/valueobject/AccountType.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/security/JwtAuthFilter.java
@@ -53,11 +56,13 @@
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/exception/ResourceNotFoundException.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/response/TransactionResponse.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/repository/CategoryRepository.java
+/home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/valueobject/UserStatus.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/persistence/repository/BudgetJpaRepository.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/request/CreateCategoryRequest.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/request/CreateGoalRequest.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/presentation/controller/GoalController.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/presentation/controller/BudgetController.java
+/home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/valueobject/BudgetPeriod.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/usecase/GetDashboardUseCase.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/exception/DomainException.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/valueobject/Money.java
@@ -70,6 +75,7 @@
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/request/CreateAccountRequest.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/infrastructure/persistence/repository/CategoryJpaRepository.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/exception/BusinessException.java
+/home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/model/SystemParameter.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/domain/valueobject/TransactionType.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/usecase/CancelTransactionUseCase.java
 /home/henrique/Projects/projeto-sirius-financas/src/main/java/com/financas/application/dto/response/AccountResponse.java

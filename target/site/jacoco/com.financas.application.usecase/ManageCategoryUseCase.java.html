@@ -20,7 +20,7 @@ public class ManageCategoryUseCase {
     @Transactional
     public CategoryResponse create(UUID userId, CreateCategoryRequest request) {
 <span class="nc" id="L22">        Category category = Category.create(userId, request.getName(),</span>
-<span class="nc" id="L23">                request.getType(), request.getColor(), request.getIcon());</span>
+<span class="nc" id="L23">                request.getType(), request.getColor(), request.getIcon(), request.getParentId());</span>
 <span class="nc" id="L24">        return toResponse(categoryRepository.save(category));</span>
     }
 

@@ -25,26 +25,36 @@ public class TransactionEntity {
     @Column(name = &quot;account_id&quot;, nullable = false)
 <span class="nc" id="L26">    private UUID accountId;</span>
 
+    @Column(name = &quot;user_id&quot;, nullable = false)
+<span class="nc" id="L29">    private UUID userId;</span>
+
     @Column(name = &quot;category_id&quot;)
-<span class="nc" id="L29">    private UUID categoryId;</span>
+<span class="nc" id="L32">    private UUID categoryId;</span>
 
     @Column(name = &quot;recurrence_id&quot;)
-<span class="nc" id="L32">    private UUID recurrenceId;</span>
+<span class="nc" id="L35">    private UUID recurrenceId;</span>
 
     @Column(precision = 15, scale = 2, nullable = false)
-<span class="nc" id="L35">    private BigDecimal amount;</span>
+<span class="nc" id="L38">    private BigDecimal amount;</span>
 
     @Enumerated(EnumType.STRING)
-<span class="nc" id="L38">    private TransactionType type;</span>
+<span class="nc" id="L41">    private TransactionType type;</span>
 
-<span class="nc" id="L40">    private String description;</span>
+<span class="nc" id="L43">    private String description;</span>
     @Column(name = &quot;transaction_date&quot;)
-<span class="nc" id="L42">    private LocalDate transactionDate;</span>
+<span class="nc" id="L45">    private LocalDate transactionDate;</span>
 
     @Enumerated(EnumType.STRING)
-<span class="nc" id="L45">    private TransactionStatus status;</span>
+<span class="nc" id="L48">    private TransactionStatus status;</span>
 
     @CreationTimestamp
-<span class="nc" id="L48">    private LocalDateTime createdAt;</span>
+<span class="nc" id="L51">    private LocalDateTime createdAt;</span>
+
+    @Column(nullable = false)
+<span class="nc" id="L54">    private boolean installment;</span>
+
+<span class="nc" id="L56">    int totalInstallments;</span>
+
+<span class="nc" id="L58">    int currentInstallment;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

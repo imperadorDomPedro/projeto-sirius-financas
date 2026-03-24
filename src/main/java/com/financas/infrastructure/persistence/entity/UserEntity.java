@@ -1,5 +1,6 @@
 package com.financas.infrastructure.persistence.entity;
 
+import com.financas.domain.valueobject.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,6 +33,8 @@ public class UserEntity {
     private String currency;
 
     private boolean active;
+
+    private UserStatus status;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

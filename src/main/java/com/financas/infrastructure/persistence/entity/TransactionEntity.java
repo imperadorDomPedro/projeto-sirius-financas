@@ -25,6 +25,9 @@ public class TransactionEntity {
     @Column(name = "account_id", nullable = false)
     private UUID accountId;
 
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
+
     @Column(name = "category_id")
     private UUID categoryId;
 
@@ -46,4 +49,11 @@ public class TransactionEntity {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private boolean installment;
+
+    int totalInstallments;
+
+    int currentInstallment;
 }

@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
     public TransactionEntity toEntity(Transaction t) {
 <span class="nc" id="L11">        return TransactionEntity.builder()</span>
 <span class="nc" id="L12">                .id(t.getId()).accountId(t.getAccountId()).categoryId(t.getCategoryId())</span>
-<span class="nc" id="L13">                .recurrenceId(t.getRecurrenceId()).amount(t.getAmount().amount())</span>
+<span class="nc" id="L13">                .amount(t.getAmount().amount())</span>
 <span class="nc" id="L14">                .type(t.getType()).description(t.getDescription())</span>
-<span class="nc" id="L15">                .transactionDate(t.getTransactionDate()).status(t.getStatus()).build();</span>
+<span class="nc" id="L15">                .transactionDate(t.getDate()).status(t.getStatus()).build();</span>
     }
 
     public Transaction toDomain(TransactionEntity e) {
-<span class="nc" id="L19">        return Transaction.reconstitute(e.getId(), e.getAccountId(), e.getCategoryId(),</span>
-<span class="nc" id="L20">                e.getRecurrenceId(), Money.of(e.getAmount()), e.getType(),</span>
-<span class="nc" id="L21">                e.getDescription(), e.getTransactionDate(), e.getStatus());</span>
+<span class="nc" id="L19">        return Transaction.reconstitute(e.getId(), e.getAccountId(), e.getUserId(),</span>
+<span class="nc" id="L20">                Money.of(e.getAmount()), e.getType(), e.getCategoryId(), e.getTransactionDate(),</span>
+<span class="nc" id="L21">                e.getDescription(), e.getStatus(), e.isInstallment(), e.getTotalInstallments(), e.getCurrentInstallment());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

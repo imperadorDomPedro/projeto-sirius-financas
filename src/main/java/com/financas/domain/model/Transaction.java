@@ -17,11 +17,11 @@ public class Transaction {
 
     private final UUID userId;
 
-    private Money amount;
+    private final Money amount;
 
-    private TransactionType type;
+    private final TransactionType type;
 
-    private UUID categoryId;
+    private final UUID categoryId;
 
     private LocalDate date;
 
@@ -112,6 +112,10 @@ public class Transaction {
         this.date = newDate;
     }
 
+    public boolean isExpense() { return this.type == TransactionType.EXPENSE; }
+
+    public boolean isIncome() { return this.type == TransactionType.INCOME; }
+
     public boolean isPending() {
         return this.status == TransactionStatus.PENDING;
     }
@@ -123,4 +127,6 @@ public class Transaction {
     public boolean isConfirmed() {
         return this.status == TransactionStatus.CONFIRMED;
     }
+
+
 }

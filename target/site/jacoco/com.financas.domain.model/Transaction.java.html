@@ -11,72 +11,123 @@ import java.util.UUID;
 @Getter
 public class Transaction {
 
-<span class="nc" id="L14">    private final UUID id;</span>
+<span class="fc" id="L14">    private final UUID id;</span>
 
-<span class="nc" id="L16">    private final UUID accountId;</span>
+<span class="fc" id="L16">    private final UUID accountId;</span>
 
-<span class="nc" id="L18">    private UUID categoryId;</span>
+<span class="fc" id="L18">    private final UUID userId;</span>
 
-<span class="nc" id="L20">    private UUID recurrenceId;</span>
+<span class="fc" id="L20">    private final Money amount;</span>
 
-<span class="nc" id="L22">    private Money amount;</span>
+<span class="fc" id="L22">    private final TransactionType type;</span>
 
-<span class="nc" id="L24">    private TransactionType type;</span>
+<span class="fc" id="L24">    private final UUID categoryId;</span>
 
-<span class="nc" id="L26">    private String description;</span>
+<span class="fc" id="L26">    private LocalDate date;</span>
 
-<span class="nc" id="L28">    private LocalDate transactionDate;</span>
+<span class="fc" id="L28">    private String description;</span>
 
 <span class="fc" id="L30">    private TransactionStatus status;</span>
 
-    private Transaction(UUID id, UUID accountId, UUID categoryId, UUID recurrenceId,
-                        Money amount, TransactionType type, String description,
-<span class="fc" id="L34">                        LocalDate transactionDate, TransactionStatus status) {</span>
-<span class="fc" id="L35">        this.id = id;</span>
-<span class="fc" id="L36">        this.accountId = accountId;</span>
-<span class="fc" id="L37">        this.categoryId = categoryId;</span>
-<span class="fc" id="L38">        this.recurrenceId = recurrenceId;</span>
-<span class="fc" id="L39">        this.amount = amount;</span>
-<span class="fc" id="L40">        this.type = type;</span>
-<span class="fc" id="L41">        this.description = description;</span>
-<span class="fc" id="L42">        this.transactionDate = transactionDate;</span>
-<span class="fc" id="L43">        this.status = status;</span>
-<span class="fc" id="L44">    }</span>
+<span class="fc" id="L32">    private final boolean installment;</span>
 
-    public static Transaction create(UUID accountId, UUID categoryId, Money amount,
-                                     TransactionType type, String description, LocalDate date) {
-<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (accountId == null) throw new IllegalArgumentException(&quot;Account is required&quot;);</span>
-<span class="pc bpc" id="L49" title="1 of 4 branches missed.">        if (amount == null || amount.isZero()) throw new IllegalArgumentException(&quot;Amount must be greater than zero&quot;);</span>
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (type == null) throw new IllegalArgumentException(&quot;Transaction type is required&quot;);</span>
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if (date == null) throw new IllegalArgumentException(&quot;Date is required&quot;);</span>
+<span class="fc" id="L34">    private final int totalInstallments;</span>
 
-<span class="fc" id="L53">        return new Transaction(UUID.randomUUID(), accountId, categoryId, null,</span>
-                amount, type, description, date, TransactionStatus.CONFIRMED);
+<span class="fc" id="L36">    private final int currentInstallment;</span>
+
+    private Transaction(UUID id, UUID accountId, UUID userId, Money amount,
+                        TransactionType type, UUID categoryId, LocalDate date,
+                        String description, TransactionStatus status,
+<span class="fc" id="L41">                        boolean installment, int totalInstallments, int currentInstallment) {</span>
+<span class="fc" id="L42">        this.id = id;</span>
+<span class="fc" id="L43">        this.accountId = accountId;</span>
+<span class="fc" id="L44">        this.userId = userId;</span>
+<span class="fc" id="L45">        this.amount = amount;</span>
+<span class="fc" id="L46">        this.type = type;</span>
+<span class="fc" id="L47">        this.categoryId = categoryId;</span>
+<span class="fc" id="L48">        this.date = date;</span>
+<span class="fc" id="L49">        this.description = description;</span>
+<span class="fc" id="L50">        this.status = status;</span>
+<span class="fc" id="L51">        this.installment = installment;</span>
+<span class="fc" id="L52">        this.totalInstallments = totalInstallments;</span>
+<span class="fc" id="L53">        this.currentInstallment = currentInstallment;</span>
+<span class="fc" id="L54">    }</span>
+
+    public static Transaction create(UUID accountId, UUID userId, Money amount,
+                                     TransactionType type, UUID categoryId,
+                                     LocalDate date, String description) {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (accountId == null) throw new IllegalArgumentException(&quot;AccountId is required&quot;);</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (userId == null) throw new IllegalArgumentException(&quot;UserId is required&quot;);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (amount == null) throw new IllegalArgumentException(&quot;Amount is required&quot;);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (amount.isZero()) throw new IllegalArgumentException(&quot;Amount cannot be zero&quot;);</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (type == null) throw new IllegalArgumentException(&quot;Transaction type is required&quot;);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (date == null) throw new IllegalArgumentException(&quot;Date is required&quot;);</span>
+
+<span class="fc" id="L66">        return new Transaction(UUID.randomUUID(), accountId, userId, amount, type,</span>
+                categoryId, date, description, TransactionStatus.CONFIRMED,
+                false, 1, 1);
     }
 
-    public static Transaction reconstitute(UUID id, UUID accountId, UUID categoryId, UUID recurrenceId,
-                                            Money amount, TransactionType type, String description,
-                                            LocalDate date, TransactionStatus status) {
-<span class="nc" id="L60">        return new Transaction(id, accountId, categoryId, recurrenceId, amount, type, description, date, status);</span>
+    public static Transaction createInstallment(UUID accountId, UUID userId, Money amount,
+                                                TransactionType type, UUID categoryId,
+                                                LocalDate date, String description,
+                                                int totalInstallments, int currentInstallment) {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (totalInstallments &lt; 2) throw new IllegalArgumentException(&quot;Installments must be at least 2&quot;);</span>
+<span class="fc bfc" id="L76" title="All 4 branches covered.">        if (currentInstallment &lt; 1 || currentInstallment &gt; totalInstallments)</span>
+<span class="fc" id="L77">            throw new IllegalArgumentException(&quot;Current installment out of range&quot;);</span>
+
+<span class="fc" id="L79">        return new Transaction(UUID.randomUUID(), accountId, userId, amount, type,</span>
+                categoryId, date, description, TransactionStatus.CONFIRMED,
+                true, totalInstallments, currentInstallment);
     }
 
-    public void cancel() {
-<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (this.status == TransactionStatus.CANCELLED) {</span>
-<span class="fc" id="L65">            throw new IllegalStateException(&quot;Transaction is already cancelled&quot;);</span>
-        }
-<span class="fc" id="L67">        this.status = TransactionStatus.CANCELLED;</span>
-<span class="fc" id="L68">    }</span>
+    public static Transaction reconstitute(UUID id, UUID accountId, UUID userId, Money amount,
+                                           TransactionType type, UUID categoryId, LocalDate date,
+                                           String description, TransactionStatus status,
+                                           boolean installment, int totalInstallments, int currentInstallment) {
+<span class="fc" id="L88">        return new Transaction(id, accountId, userId, amount, type, categoryId, date,</span>
+                description, status, installment, totalInstallments, currentInstallment);
+    }
 
     public void confirm() {
-<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (this.status != TransactionStatus.PENDING) {</span>
-<span class="nc" id="L72">            throw new IllegalStateException(&quot;Only pending transactions can be confirmed&quot;);</span>
-        }
-<span class="nc" id="L74">        this.status = TransactionStatus.CONFIRMED;</span>
-<span class="nc" id="L75">    }</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (this.status == TransactionStatus.CANCELLED)</span>
+<span class="fc" id="L94">            throw new IllegalStateException(&quot;Cannot confirm a cancelled transaction&quot;);</span>
+<span class="fc" id="L95">        this.status = TransactionStatus.CONFIRMED;</span>
+<span class="fc" id="L96">    }</span>
 
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">    public boolean isExpense()  { return this.type == TransactionType.EXPENSE; }</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">    public boolean isIncome()   { return this.type == TransactionType.INCOME; }</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">    public boolean isConfirmed(){ return this.status == TransactionStatus.CONFIRMED; }</span>
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">    public boolean isCancelled(){ return this.status == TransactionStatus.CANCELLED; }</span>
+    public void cancel() {
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (this.status == TransactionStatus.CANCELLED)</span>
+<span class="fc" id="L100">            throw new IllegalStateException(&quot;Transaction is already cancelled&quot;);</span>
+<span class="fc" id="L101">        this.status = TransactionStatus.CANCELLED;</span>
+<span class="fc" id="L102">    }</span>
+
+    public void updateDescription(String description) {
+<span class="fc" id="L105">        this.description = description;</span>
+<span class="fc" id="L106">    }</span>
+
+    public void reschedule(LocalDate newDate) {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (newDate == null) throw new IllegalArgumentException(&quot;Date cannot be null&quot;);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (this.status == TransactionStatus.CANCELLED)</span>
+<span class="fc" id="L111">            throw new IllegalStateException(&quot;Cannot reschedule a cancelled transaction&quot;);</span>
+<span class="fc" id="L112">        this.date = newDate;</span>
+<span class="fc" id="L113">    }</span>
+
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    public boolean isExpense() { return this.type == TransactionType.EXPENSE; }</span>
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    public boolean isIncome() { return this.type == TransactionType.INCOME; }</span>
+
+    public boolean isPending() {
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        return this.status == TransactionStatus.PENDING;</span>
+    }
+
+    public boolean isCancelled() {
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        return this.status == TransactionStatus.CANCELLED;</span>
+    }
+
+    public boolean isConfirmed() {
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        return this.status == TransactionStatus.CONFIRMED;</span>
+    }
+
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

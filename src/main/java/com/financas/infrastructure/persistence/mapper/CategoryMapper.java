@@ -15,6 +15,6 @@ public class CategoryMapper {
 
     public Category toDomain(CategoryEntity e) {
         return Category.reconstitute(e.getId(), e.getUserId(), e.getName(),
-                e.getType(), e.getColor(), e.getIcon(), e.getParentId());
+                e.getType(), e.getColor(), e.getIcon(), e.getParentId(), e.isActive());
     }
 }

@@ -29,36 +29,37 @@ public class CreateTransactionUseCase {
 
 <span class="nc" id="L30">        Transaction transaction = Transaction.create(</span>
 <span class="nc" id="L31">                account.getId(),</span>
-<span class="nc" id="L32">                request.getCategoryId(),</span>
+<span class="nc" id="L32">                account.getUserId(),</span>
                 amount,
 <span class="nc" id="L34">                request.getType(),</span>
-<span class="nc" id="L35">                request.getDescription(),</span>
-<span class="nc" id="L36">                request.getTransactionDate()</span>
+<span class="nc" id="L35">                request.getCategoryId(),</span>
+<span class="nc" id="L36">                request.getTransactionDate(),</span>
+<span class="nc" id="L37">                request.getDescription()</span>
         );
 
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (transaction.isExpense()) {</span>
-<span class="nc" id="L40">            account.debit(amount);</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (transaction.isExpense()) {</span>
+<span class="nc" id="L41">            account.debit(amount);</span>
         } else {
-<span class="nc" id="L42">            account.credit(amount);</span>
+<span class="nc" id="L43">            account.credit(amount);</span>
         }
 
-<span class="nc" id="L45">        accountRepository.save(account);</span>
-<span class="nc" id="L46">        Transaction saved = transactionRepository.save(transaction);</span>
+<span class="nc" id="L46">        accountRepository.save(account);</span>
+<span class="nc" id="L47">        Transaction saved = transactionRepository.save(transaction);</span>
 
-<span class="nc" id="L48">        return toResponse(saved);</span>
+<span class="nc" id="L49">        return toResponse(saved);</span>
     }
 
     public static TransactionResponse toResponse(Transaction t) {
-<span class="nc" id="L52">        return TransactionResponse.builder()</span>
-<span class="nc" id="L53">                .id(t.getId())</span>
-<span class="nc" id="L54">                .accountId(t.getAccountId())</span>
-<span class="nc" id="L55">                .categoryId(t.getCategoryId())</span>
-<span class="nc" id="L56">                .amount(t.getAmount().amount())</span>
-<span class="nc" id="L57">                .type(t.getType())</span>
-<span class="nc" id="L58">                .description(t.getDescription())</span>
-<span class="nc" id="L59">                .transactionDate(t.getTransactionDate())</span>
-<span class="nc" id="L60">                .status(t.getStatus())</span>
-<span class="nc" id="L61">                .build();</span>
+<span class="nc" id="L53">        return TransactionResponse.builder()</span>
+<span class="nc" id="L54">                .id(t.getId())</span>
+<span class="nc" id="L55">                .accountId(t.getAccountId())</span>
+<span class="nc" id="L56">                .categoryId(t.getCategoryId())</span>
+<span class="nc" id="L57">                .amount(t.getAmount().amount())</span>
+<span class="nc" id="L58">                .type(t.getType())</span>
+<span class="nc" id="L59">                .description(t.getDescription())</span>
+<span class="nc" id="L60">                .transactionDate(t.getDate())</span>
+<span class="nc" id="L61">                .status(t.getStatus())</span>
+<span class="nc" id="L62">                .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

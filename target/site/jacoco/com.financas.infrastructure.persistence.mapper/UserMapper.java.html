@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
     public UserEntity toEntity(User u) {
 <span class="nc" id="L10">        return UserEntity.builder()</span>
 <span class="nc" id="L11">                .id(u.getId()).name(u.getName()).email(u.getEmail())</span>
-<span class="nc" id="L12">                .passwordHash(u.getPasswordHash()).currency(u.getCurrency())</span>
-<span class="nc" id="L13">                .active(u.isActive()).createdAt(u.getCreatedAt()).build();</span>
+<span class="nc" id="L12">                .passwordHash(u.getPasswordHash()).active(u.isActive())</span>
+<span class="nc" id="L13">                .createdAt(u.getCreatedAt()).build();</span>
     }
 
     public User toDomain(UserEntity e) {
 <span class="nc" id="L17">        return User.reconstitute(e.getId(), e.getName(), e.getEmail(),</span>
-<span class="nc" id="L18">                e.getPasswordHash(), e.getCurrency(), e.isActive(), e.getCreatedAt());</span>
+<span class="nc" id="L18">                e.getPasswordHash(), e.getStatus(), e.getCreatedAt(), e.getUpdatedAt());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

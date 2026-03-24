@@ -32,4 +32,7 @@ public class CategoryEntity {
 
     @Column(name = "parent_id")
     private UUID parentId;
+
+    @Column(nullable = false)
+    private boolean active;
 }

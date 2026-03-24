@@ -14,39 +14,59 @@ public class Category {
 
 <span class="nc" id="L15">    private String name;</span>
 
-<span class="nc" id="L17">    private CategoryType type;</span>
+<span class="nc" id="L17">    private final CategoryType type;</span>
 
 <span class="nc" id="L19">    private String color;</span>
 
 <span class="nc" id="L21">    private String icon;</span>
 
-<span class="nc" id="L23">    private UUID parentId;</span>
+<span class="nc" id="L23">    private final UUID parentId; // null = categoria raiz</span>
+
+<span class="nc" id="L25">    private boolean active;</span>
 
     private Category(UUID id, UUID userId, String name, CategoryType type,
-<span class="nc" id="L26">                     String color, String icon, UUID parentId) {</span>
-<span class="nc" id="L27">        this.id = id;</span>
-<span class="nc" id="L28">        this.userId = userId;</span>
-<span class="nc" id="L29">        this.name = name;</span>
-<span class="nc" id="L30">        this.type = type;</span>
-<span class="nc" id="L31">        this.color = color;</span>
-<span class="nc" id="L32">        this.icon = icon;</span>
-<span class="nc" id="L33">        this.parentId = parentId;</span>
-<span class="nc" id="L34">    }</span>
+<span class="nc" id="L28">                     String color, String icon, UUID parentId, boolean active) {</span>
+<span class="nc" id="L29">        this.id = id;</span>
+<span class="nc" id="L30">        this.userId = userId;</span>
+<span class="nc" id="L31">        this.name = name;</span>
+<span class="nc" id="L32">        this.type = type;</span>
+<span class="nc" id="L33">        this.color = color;</span>
+<span class="nc" id="L34">        this.icon = icon;</span>
+<span class="nc" id="L35">        this.parentId = parentId;</span>
+<span class="nc" id="L36">        this.active = active;</span>
+<span class="nc" id="L37">    }</span>
 
-    public static Category create(UUID userId, String name, CategoryType type, String color, String icon) {
-<span class="nc bnc" id="L37" title="All 4 branches missed.">        if (name == null || name.isBlank()) throw new IllegalArgumentException(&quot;Category name is required&quot;);</span>
-<span class="nc" id="L38">        return new Category(UUID.randomUUID(), userId, name, type, color, icon, null);</span>
+    public static Category create(UUID userId, String name, CategoryType type,
+                                  String color, String icon, UUID parentId) {
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (userId == null) throw new IllegalArgumentException(&quot;UserId is required&quot;);</span>
+<span class="nc bnc" id="L42" title="All 4 branches missed.">        if (name == null || name.isBlank()) throw new IllegalArgumentException(&quot;Category name is required&quot;);</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (type == null) throw new IllegalArgumentException(&quot;Category type is required&quot;);</span>
+
+<span class="nc" id="L45">        return new Category(UUID.randomUUID(), userId, name.trim(), type,</span>
+                color, icon, parentId, true);
     }
 
     public static Category reconstitute(UUID id, UUID userId, String name, CategoryType type,
-                                         String color, String icon, UUID parentId) {
-<span class="nc" id="L43">        return new Category(id, userId, name, type, color, icon, parentId);</span>
+                                        String color, String icon, UUID parentId, boolean active) {
+<span class="nc" id="L51">        return new Category(id, userId, name, type, color, icon, parentId, active);</span>
     }
 
-    public void update(String name, String color, String icon) {
-<span class="nc bnc" id="L47" title="All 4 branches missed.">        if (name != null &amp;&amp; !name.isBlank()) this.name = name;</span>
-<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (color != null) this.color = color;</span>
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (icon != null) this.icon = icon;</span>
-<span class="nc" id="L50">    }</span>
+    public boolean isSubcategory() {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        return this.parentId != null;</span>
+    }
+
+    public void rename(String newName) {
+<span class="nc bnc" id="L59" title="All 4 branches missed.">        if (newName == null || newName.isBlank()) throw new IllegalArgumentException(&quot;Name cannot be blank&quot;);</span>
+<span class="nc" id="L60">        this.name = newName.trim();</span>
+<span class="nc" id="L61">    }</span>
+
+    public void updateAppearance(String color, String icon) {
+<span class="nc bnc" id="L64" title="All 4 branches missed.">        if (color != null &amp;&amp; !color.isBlank()) this.color = color;</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">        if (icon != null &amp;&amp; !icon.isBlank()) this.icon = icon;</span>
+<span class="nc" id="L66">    }</span>
+
+    public void deactivate() {
+<span class="nc" id="L69">        this.active = false;</span>
+<span class="nc" id="L70">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

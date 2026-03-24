@@ -35,11 +35,13 @@ com/financas/infrastructure/persistence/entity/TransactionEntity.class
 com/financas/domain/repository/AccountRepository.class
 com/financas/infrastructure/persistence/repository/UserRepositoryImpl.class
 com/financas/presentation/controller/AuthController.class
+com/financas/domain/model/Permission.class
 com/financas/application/dto/response/CategoryResponse$CategoryResponseBuilder.class
 com/financas/domain/repository/TransactionRepository.class
 com/financas/infrastructure/persistence/entity/CategoryEntity.class
 com/financas/infrastructure/persistence/entity/GoalEntity$GoalEntityBuilder.class
 com/financas/infrastructure/persistence/entity/UserEntity.class
+com/financas/domain/model/SystemParameter.class
 com/financas/domain/valueobject/TransactionStatus.class
 com/financas/infrastructure/config/SecurityConfig.class
 com/financas/application/dto/response/AuthResponse.class
@@ -47,6 +49,7 @@ com/financas/application/dto/request/CreateTransactionRequest.class
 com/financas/domain/exception/BusinessException.class
 com/financas/application/usecase/CreateAccountUseCase.class
 com/financas/domain/model/Category.class
+com/financas/domain/valueobject/UserStatus.class
 com/financas/infrastructure/persistence/entity/BudgetEntity$BudgetEntityBuilder.class
 com/financas/application/usecase/TransferFundsUseCase.class
 com/financas/application/dto/response/TransferResponse.class
@@ -55,6 +58,7 @@ com/financas/domain/repository/CategoryRepository.class
 com/financas/FinancasApplication.class
 com/financas/infrastructure/persistence/entity/AccountEntity$AccountEntityBuilder.class
 com/financas/domain/model/User.class
+com/financas/domain/model/UserProfile.class
 com/financas/domain/repository/BudgetRepository.class
 com/financas/application/dto/response/BudgetResponse.class
 com/financas/domain/valueobject/CategoryType.class
@@ -73,10 +77,12 @@ com/financas/infrastructure/persistence/repository/BudgetJpaRepository.class
 com/financas/infrastructure/persistence/mapper/AccountMapper.class
 com/financas/infrastructure/persistence/repository/TransactionJpaRepository.class
 com/financas/application/usecase/ManageBudgetUseCase.class
+com/financas/domain/model/Role.class
 com/financas/application/dto/request/CreateCategoryRequest.class
 com/financas/application/usecase/GetDashboardUseCase.class
 com/financas/infrastructure/persistence/mapper/CategoryMapper.class
 com/financas/infrastructure/persistence/entity/CategoryEntity$CategoryEntityBuilder.class
+com/financas/domain/valueobject/BudgetPeriod.class
 com/financas/infrastructure/persistence/repository/CategoryRepositoryImpl.class
 com/financas/application/dto/request/CreateGoalRequest.class
 com/financas/infrastructure/security/JwtAuthFilter.class
